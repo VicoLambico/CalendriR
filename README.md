@@ -1,12 +1,16 @@
 # CalendriR
-install PostgreSQL
-Ajouter variable d'environnement dans PATH 
 
-modifier le CalendriR>config>dev.exs :
-"password: "mdp mis lors de l'instalation de PostgreSQL",
+1) install PostgreSQL
+2) Ajouter variable d'environnement dans PATH 
+
+3) modifier le CalendriR>config>dev.exs :
+   password: "mdp mis lors de l'instalation de PostgreSQL",
+
+4) install phoenix :
+   mix archive.install hex phx_new
 
 
-To start your Phoenix server:
+5) To start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
