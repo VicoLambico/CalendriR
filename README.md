@@ -1,7 +1,7 @@
 # CalendriR
 
 1) install PostgreSQL
-2) Ajouter variable d'environnement dans PATH 
+2) Ajouter variable d'environnement dans PATH (scool jusqu'au image  https://stackoverflow.com/questions/30401460/postgres-psql-not-recognized-as-an-internal-or-external-command)
 
 3) modifier le CalendriR>config>dev.exs :
    password: "mdp mis lors de l'instalation de PostgreSQL",
