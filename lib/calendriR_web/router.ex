@@ -15,6 +15,9 @@ defmodule CalendriRWeb.Router do
   end
 
   scope "/", CalendriRWeb do
+
+    # Ajouter ici les routes
+
     pipe_through :browser
 
     get "/", PageController, :home
