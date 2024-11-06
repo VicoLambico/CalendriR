@@ -1,12 +1,17 @@
 # CalendriR
-install PostgreSQL
-Ajouter variable d'environnement dans PATH 
 
-modifier le CalendriR>config>dev.exs :
-"password: "mdp mis lors de l'instalation de PostgreSQL",
+1) install PostgreSQL
+2) Ajouter variable d'environnement dans PATH (scool jusqu'au image  https://stackoverflow.com/questions/30401460/postgres-psql-not-recognized-as-an-internal-or-external-command)
 
+3) modifier le CalendriR>config>dev.exs :
+   password: "mdp mis lors de l'instalation de PostgreSQL",
 
-To start your Phoenix server:
+4) install phoenix :
+   mix archive.install hex phx_new
+   
+5) Pour configurer votre base de données dans Phoenix exécuter la commande mix ecto.create
+
+6) To start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
