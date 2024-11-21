@@ -3,7 +3,7 @@ import Config
 # Configure your database
 config :calendriR, CalendriR.Repo,
   username: "postgres",
-  password: "Am$trongJeNeSuisPasN0ir",
+  password: "postgres",
   hostname: "localhost",
   database: "calendrir_dev",
   stacktrace: true,

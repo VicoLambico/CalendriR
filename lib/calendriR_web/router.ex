@@ -16,11 +16,13 @@ defmodule CalendriRWeb.Router do
 
   scope "/", CalendriRWeb do
 
-    # Ajouter ici les routes
-
     pipe_through :browser
 
     get "/", PageController, :home
+
+     # Ajouter ici les routes
+     live "/home", HomeLive.Index
+
   end
 
   # Other scopes may use custom stacks.
