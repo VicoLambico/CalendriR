@@ -6,38 +6,55 @@ defmodule CalendriRWeb.UserRegistrationLive do
 
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
-      <.header class="text-center">
-        Register for an account
-        <:subtitle>
-          Already registered?
-          <.link navigate={~p"/users/log_in"} class="font-semibold text-brand hover:underline">
-            Log in
-          </.link>
-          to your account now.
-        </:subtitle>
-      </.header>
+    <div class="flex items-center justify-center ">
+      <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
+        <.header class="text-center">
+          <h2 class="text-3xl font-extrabold text-gray-900">Register for an account</h2>
+          <:subtitle>
+            <p class="mt-2 text-sm text-gray-600">
+              Already registered?
+              <.link navigate={~p"/users/log_in"} class="font-medium text-indigo-600 hover:text-indigo-500">
+                Log in
+              </.link>
+              to your account now.
+            </p>
+          </:subtitle>
+        </.header>
 
-      <.simple_form
-        for={@form}
-        id="registration_form"
-        phx-submit="save"
-        phx-change="validate"
-        phx-trigger-action={@trigger_submit}
-        action={~p"/users/log_in?_action=registered"}
-        method="post"
-      >
-        <.error :if={@check_errors}>
-          Oops, something went wrong! Please check the errors below.
-        </.error>
+        <.simple_form
+          for={@form}
+          id="registration_form"
+          phx-submit="save"
+          phx-change="validate"
+          phx-trigger-action={@trigger_submit}
+          action={~p"/users/log_in?_action=registered"}
+          method="post"
+          class="space-y-6"
+        >
+          <div class="space-y-4">
+            <.input
+              field={@form[:email]}
+              type="email"
+              label="Email"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+            <.input
+              field={@form[:password]}
+              type="password"
+              label="Password"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
 
-        <.input field={@form[:email]} type="email" label="Email" required />
-        <.input field={@form[:password]} type="password" label="Password" required />
-
-        <:actions>
-          <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
-        </:actions>
-      </.simple_form>
+          <:actions>
+            <.button phx-disable-with="Creating account..." class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              Create an account
+            </.button>
+          </:actions>
+        </.simple_form>
+      </div>
     </div>
     """
   end
