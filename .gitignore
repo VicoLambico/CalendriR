@@ -14,7 +14,7 @@
 /.fetch
 
 # Ignore personnal config/dev.exs file
-/config/dev.exs
+./config/dev.exs
 
 # If the VM crashes, it generates a dump, let's ignore it too.
 erl_crash.dump
