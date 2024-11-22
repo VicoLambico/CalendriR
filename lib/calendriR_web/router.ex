@@ -24,21 +24,7 @@ defmodule CalendriRWeb.Router do
 
     get "/", PageController, :home
 
-     # Ajouter ici les routes
-     live "events", EventLive.Index, :index
-     live "/events/new", EventLive.Index, :new
-     live "/events/:id/edit", EventLive.Index, :edit
-
-     live "/events/:id", EventLive.Show, :show
-     live "/events/:id/show/edit", EventLive.Show, :edit
-
-     live "/teams", TeamLive.Index, :index
-     live "/teams/new", TeamLive.Index, :new
-     live "/teams/:id/edit", TeamLive.Index, :edit
-
-     live "/teams/:id", TeamLive.Show, :show
-     live "/teams/:id/show/edit", TeamLive.Show, :edit
-
+     
 
   end
 
@@ -87,6 +73,22 @@ defmodule CalendriRWeb.Router do
       on_mount: [{CalendriRWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+     # Ajouter ici les routes
+     live "events", EventLive.Index, :index
+     live "/events/new", EventLive.Index, :new
+     live "/events/:id/edit", EventLive.Index, :edit
+
+     live "/events/:id", EventLive.Show, :show
+     live "/events/:id/show/edit", EventLive.Show, :edit
+
+     live "/teams", TeamLive.Index, :index
+     live "/teams/new", TeamLive.Index, :new
+     live "/teams/:id/edit", TeamLive.Index, :edit
+
+     live "/teams/:id", TeamLive.Show, :show
+     live "/teams/:id/show/edit", TeamLive.Show, :edit
+
     end
   end
 
