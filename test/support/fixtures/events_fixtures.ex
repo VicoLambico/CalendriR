@@ -12,8 +12,9 @@ defmodule CalendriR.EventsFixtures do
       attrs
       |> Enum.into(%{
         description: "some description",
-        end_time: ~N[2024-11-21 08:39:00],
-        start_time: ~N[2024-11-21 08:39:00],
+        end_time: ~N[2024-11-21 10:33:00],
+        start_time: ~N[2024-11-21 10:33:00],
+        state: "some state",
         team: "some team",
         title: "some title"
       })

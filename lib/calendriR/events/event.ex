@@ -3,6 +3,7 @@ defmodule CalendriR.Events.Event do
   import Ecto.Changeset
 
   schema "events" do
+    field :state, :string
     field :description, :string
     field :title, :string
     field :start_time, :naive_datetime
@@ -15,7 +16,8 @@ defmodule CalendriR.Events.Event do
   @doc false
   def changeset(event, attrs) do
     event
-    |> cast(attrs, [:title, :description, :start_time, :end_time, :team])
-    |> validate_required([:title, :description, :start_time, :end_time, :team])
+    |> cast(attrs, [:title, :description, :start_time, :end_time, :team, :state])
+    |> validate_required([:title, :description, :start_time, :end_time, :team, :state])
+    |> validate_inclusion(:state, ["to do", "in progress", "terminate"])
   end
 end

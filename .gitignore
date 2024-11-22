@@ -47,3 +47,6 @@ npm-debug.log
 # OS files
 .DS_Store
 Thumbs.db
+
+# config
+/config/dev.exs

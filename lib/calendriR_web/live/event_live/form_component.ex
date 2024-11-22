@@ -24,6 +24,10 @@ defmodule CalendriRWeb.EventLive.FormComponent do
         <.input field={@form[:start_time]} type="datetime-local" label="Start time" />
         <.input field={@form[:end_time]} type="datetime-local" label="End time" />
         <.input field={@form[:team]} type="text" label="Team" />
+      <.input field={@form[:state]} type="select" label="State" options={["to do", "in progress", "terminate"]} />
+
+
+
         <:actions>
           <.button phx-disable-with="Saving...">Save Event</.button>
         </:actions>

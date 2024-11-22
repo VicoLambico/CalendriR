@@ -4,9 +4,9 @@ defmodule CalendriRWeb.EventLiveTest do
   import Phoenix.LiveViewTest
   import CalendriR.EventsFixtures
 
-  @create_attrs %{description: "some description", title: "some title", start_time: "2024-11-21T08:39:00", end_time: "2024-11-21T08:39:00", team: "some team"}
-  @update_attrs %{description: "some updated description", title: "some updated title", start_time: "2024-11-22T08:39:00", end_time: "2024-11-22T08:39:00", team: "some updated team"}
-  @invalid_attrs %{description: nil, title: nil, start_time: nil, end_time: nil, team: nil}
+  @create_attrs %{state: "some state", description: "some description", title: "some title", start_time: "2024-11-21T10:33:00", end_time: "2024-11-21T10:33:00", team: "some team"}
+  @update_attrs %{state: "some updated state", description: "some updated description", title: "some updated title", start_time: "2024-11-22T10:33:00", end_time: "2024-11-22T10:33:00", team: "some updated team"}
+  @invalid_attrs %{state: nil, description: nil, title: nil, start_time: nil, end_time: nil, team: nil}
 
   defp create_event(_) do
     event = event_fixture()
@@ -20,7 +20,7 @@ defmodule CalendriRWeb.EventLiveTest do
       {:ok, _index_live, html} = live(conn, ~p"/events")
 
       assert html =~ "Listing Events"
-      assert html =~ event.description
+      assert html =~ event.state
     end
 
     test "saves new event", %{conn: conn} do
@@ -43,7 +43,7 @@ defmodule CalendriRWeb.EventLiveTest do
 
       html = render(index_live)
       assert html =~ "Event created successfully"
-      assert html =~ "some description"
+      assert html =~ "some state"
     end
 
     test "updates event in listing", %{conn: conn, event: event} do
@@ -66,7 +66,7 @@ defmodule CalendriRWeb.EventLiveTest do
 
       html = render(index_live)
       assert html =~ "Event updated successfully"
-      assert html =~ "some updated description"
+      assert html =~ "some updated state"
     end
 
     test "deletes event in listing", %{conn: conn, event: event} do
@@ -84,7 +84,7 @@ defmodule CalendriRWeb.EventLiveTest do
       {:ok, _show_live, html} = live(conn, ~p"/events/#{event}")
 
       assert html =~ "Show Event"
-      assert html =~ event.description
+      assert html =~ event.state
     end
 
     test "updates event within modal", %{conn: conn, event: event} do
@@ -107,7 +107,7 @@ defmodule CalendriRWeb.EventLiveTest do
 
       html = render(show_live)
       assert html =~ "Event updated successfully"
-      assert html =~ "some updated description"
+      assert html =~ "some updated state"
     end
   end
 end

@@ -7,7 +7,8 @@ defmodule CalendriR.Repo.Migrations.CreateEvents do
       add :description, :text
       add :start_time, :naive_datetime
       add :end_time, :naive_datetime
-      add :team, :text
+      add :team, :string
+      add :state, :string
 
       timestamps(type: :utc_datetime)
     end
