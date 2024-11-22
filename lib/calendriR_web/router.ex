@@ -1,4 +1,5 @@
 defmodule CalendriRWeb.Router do
+
   use CalendriRWeb, :router
 
   pipeline :browser do
@@ -21,7 +22,15 @@ defmodule CalendriRWeb.Router do
     get "/", PageController, :home
 
      # Ajouter ici les routes
-     live "/home", HomeLive.Index
+     live "events", EventLive.Index, :index
+     live "/events/new", EventLive.Index, :new
+     live "/events/:id/edit", EventLive.Index, :edit
+
+     live "/events/:id", EventLive.Show, :show
+     live "/events/:id/show/edit", EventLive.Show, :edit
+
+
+
 
   end
 
