@@ -3,3 +3,88 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+
+body {
+    background: linear-gradient(to bottom right, #b3d9ff, #3385ff); /* Subtle blue gradient */
+    min-height: 100vh; /* Ensures the background covers the whole viewport */
+
+
+}
+/* Background for the home page */
+.home-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px;
+    padding: 40px;
+  }
+  
+  /* General container styling */
+  .home-container {
+    text-align: center;
+    padding: 40px 20px;
+    color: #7c0356a6;
+    background-color: rgba(0, 0, 0, 0.178); /* Semi-transparent background for text */
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Title */
+  .home-title {
+    font-size: 75px;
+    margin-bottom: 10px;
+    font-family: "Lobster Two", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  /* Subtitle */
+  .home-subtitle {
+    font-size: 30px;
+    font-family: "Lobster Two", sans-serif;
+    font-weight: 400;
+
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+  
+  /* Buttons */
+  .home-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px; /* Space between buttons */
+  }
+  
+  .home-button {
+    width: 220px;
+    padding: 12px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .create-account {
+    background-color: #4CAF50; /* Green */
+  }
+  
+  .login {
+    background-color: #008CBA; /* Blue */
+  }
+  
+  .home-button:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+  
+  /* Image below the title */
+
+  .home-image {
+    width: auto ; /* Adjust the size as needed */
+    height: auto;
+    margin: 10px;
+  }
