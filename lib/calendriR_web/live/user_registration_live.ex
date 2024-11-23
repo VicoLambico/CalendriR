@@ -49,8 +49,9 @@ defmodule CalendriRWeb.UserRegistrationLive do
           </div>
 
           <:actions>
-            <.button phx-disable-with="Creating account..." class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-              Create an account
+            <.button phx-disable-with="Creating account..." class="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 hover:scale-105 transform transition-transform duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+              Create an account <span aria-hidden="true">→</span>
             </.button>
           </:actions>
         </.simple_form>

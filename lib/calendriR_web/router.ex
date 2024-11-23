@@ -24,7 +24,7 @@ defmodule CalendriRWeb.Router do
 
     get "/", PageController, :home
 
-     
+
 
   end
 
@@ -69,10 +69,13 @@ defmodule CalendriRWeb.Router do
   scope "/", CalendriRWeb do
     pipe_through [:browser, :require_authenticated_user]
 
+
     live_session :require_authenticated_user,
       on_mount: [{CalendriRWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      live "/dashboard", DashboardLive, :index
 
      # Ajouter ici les routes
      live "events", EventLive.Index, :index

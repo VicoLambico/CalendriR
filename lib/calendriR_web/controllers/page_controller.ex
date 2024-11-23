@@ -2,8 +2,13 @@ defmodule CalendriRWeb.PageController do
   use CalendriRWeb, :controller
 
   def home(conn, _params) do
-    # The home page is often custom made,
-    # so skip the default app layout.
-    render(conn, :home, layout: false)
+    # Vérifier si l'utilisateur est connecté
+    if conn.assigns[:current_user] do
+      # Rediriger vers /dashboard si l'utilisateur est connecté
+      redirect(conn, to: ~p"/dashboard")
+    else
+      # Afficher la page d'accueil pour les utilisateurs non connectés
+      render(conn, :home, layout: false)
+    end
   end
 end
