@@ -4,65 +4,51 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content={get_csrf_token()} />
+    
+    <!-- Titre dynamique avec suffixe -->
     <.live_title suffix=" · Phoenix Framework">
       <%= assigns[:page_title] || "CalendriR" %>
     </.live_title>
+    
+    <!-- Feuille de styles principale -->
     <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+    
+    <!-- Import des polices Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link 
+      href="https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&display=swap" 
+      rel="stylesheet" 
+    />
 
-
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-
-
-
-
-    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
-    </script>
+    <!-- Script principal de l'application -->
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
   </head>
+  
   <body class="bg-white">
-    <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
-      <%= if @current_user do %>
-        <li class="text-[0.8125rem] leading-6 text-zinc-900">
-          <%= @current_user.email %>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/settings"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Settings
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/log_out"}
-            method="delete"
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Log out
-          </.link>
-        </li>
-      <% else %>
-        <li>
-          <.link
-            href={~p"/users/register"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Register
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/log_in"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Log in
-          </.link>
-        </li>
-      <% end %>
-    </ul>
+
+    <!-- Contenu affiché si l'utilisateur est connecté -->
+    <%= if @current_user do %>
+      <div class="flex justify-between p-4">
+
+        <!-- Menu principal (à gauche) -->
+        <div>
+          <%= CalendriRWeb.Layouts.render_menu(assigns) %>
+        </div>
+        
+        <!-- Menu du compte (à droite) -->
+        <div>
+          <%= CalendriRWeb.Layouts.render_account_menu(assigns) %>
+        </div>
+      </div>
+    <% else %>
+
+      <!-- Contenu affiché si l'utilisateur est déconnecté -->
+      <!-- Ajoutez ici tout contenu ou message pour les utilisateurs non connectés -->
+      
+    <% end %>
+    
+    <!-- Contenu dynamique de la page -->
     <%= @inner_content %>
   </body>
 </html>

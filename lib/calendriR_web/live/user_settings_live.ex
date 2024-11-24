@@ -5,35 +5,64 @@ defmodule CalendriRWeb.UserSettingsLive do
 
   def render(assigns) do
     ~H"""
-    <.header class="text-center">
-      Account Settings
-      <:subtitle>Manage your account email address and password settings</:subtitle>
+    <.header class="text-center mb-8">
+      <h1 class="text-3xl font-extrabold text-gray-800">Account Settings</h1>
+      <p class="text-lg text-gray-600 mt-2">Manage your account email address and password settings</p>
     </.header>
 
-    <div class="space-y-12 divide-y">
-      <div>
+    <div class="space-y-12 divide-y divide-gray-200">
+      <!-- Change Email Section -->
+      <div class="py-6 px-4 bg-white shadow-xl rounded-lg max-w-3xl mx-auto">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Change Email Address</h2>
         <.simple_form
           for={@email_form}
           id="email_form"
           phx-submit="update_email"
           phx-change="validate_email"
+          class="space-y-6"
         >
-          <.input field={@email_form[:email]} type="email" label="Email" required />
-          <.input
-            field={@email_form[:current_password]}
-            name="current_password"
-            id="current_password_for_email"
-            type="password"
-            label="Current password"
-            value={@email_form_current_password}
-            required
-          />
+          <div class="flex flex-col space-y-4">
+            <div class="relative">
+              <.input
+                field={@email_form[:email]}
+                type="email"
+                label="Email"
+                required
+                class="peer p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 transition-all"
+              />
+              <div class="absolute top-1 left-3 text-gray-500 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500">
+                <i class="fas fa-envelope"></i>
+              </div>
+            </div>
+
+            <div class="relative">
+              <.input
+                field={@email_form[:current_password]}
+                name="current_password"
+                id="current_password_for_email"
+                type="password"
+                label="Current password"
+                value={@email_form_current_password}
+                required
+                class="peer p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 transition-all"
+              />
+              <div class="absolute top-1 left-3 text-gray-500 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500">
+                <i class="fas fa-lock"></i>
+              </div>
+            </div>
+          </div>
+
           <:actions>
-            <.button phx-disable-with="Changing...">Change Email</.button>
+            <.button phx-disable-with="Changing..." class="w-full py-3 mt-4 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 transition-all">
+              Change Email
+            </.button>
           </:actions>
         </.simple_form>
       </div>
-      <div>
+
+      <!-- Change Password Section -->
+      <div class="py-6 px-4 bg-white shadow-xl rounded-lg max-w-3xl mx-auto mt-6">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Change Password</h2>
         <.simple_form
           for={@password_form}
           id="password_form"
@@ -42,6 +71,7 @@ defmodule CalendriRWeb.UserSettingsLive do
           phx-change="validate_password"
           phx-submit="update_password"
           phx-trigger-action={@trigger_submit}
+          class="space-y-6"
         >
           <input
             name={@password_form[:email].name}
@@ -49,29 +79,61 @@ defmodule CalendriRWeb.UserSettingsLive do
             id="hidden_user_email"
             value={@current_email}
           />
-          <.input field={@password_form[:password]} type="password" label="New password" required />
-          <.input
-            field={@password_form[:password_confirmation]}
-            type="password"
-            label="Confirm new password"
-          />
-          <.input
-            field={@password_form[:current_password]}
-            name="current_password"
-            type="password"
-            label="Current password"
-            id="current_password_for_password"
-            value={@current_password}
-            required
-          />
+          <div class="flex flex-col space-y-4">
+            <div class="relative">
+              <.input
+                field={@password_form[:password]}
+                type="password"
+                label="New password"
+                required
+                class="peer p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 transition-all"
+              />
+              <div class="absolute top-1 left-3 text-gray-500 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500">
+                <i class="fas fa-key"></i>
+              </div>
+            </div>
+
+            <div class="relative">
+              <.input
+                field={@password_form[:password_confirmation]}
+                type="password"
+                label="Confirm new password"
+                class="peer p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 transition-all"
+              />
+              <div class="absolute top-1 left-3 text-gray-500 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500">
+                <i class="fas fa-key"></i>
+              </div>
+            </div>
+
+            <div class="relative">
+              <.input
+                field={@password_form[:current_password]}
+                name="current_password"
+                type="password"
+                label="Current password"
+                id="current_password_for_password"
+                value={@current_password}
+                required
+                class="peer p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 transition-all"
+              />
+              <div class="absolute top-1 left-3 text-gray-500 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500">
+                <i class="fas fa-lock"></i>
+              </div>
+            </div>
+          </div>
+
           <:actions>
-            <.button phx-disable-with="Changing...">Change Password</.button>
+            <.button phx-disable-with="Changing..." class="w-full py-3 mt-4 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 transition-all">
+              Change Password
+            </.button>
           </:actions>
         </.simple_form>
       </div>
     </div>
     """
   end
+
+
 
   def mount(%{"token" => token}, _session, socket) do
     socket =

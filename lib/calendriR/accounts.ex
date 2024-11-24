@@ -38,11 +38,15 @@ defmodule CalendriR.Accounts do
       nil
 
   """
-  def get_user_by_email_and_password(email, password)
-      when is_binary(email) and is_binary(password) do
-    user = Repo.get_by(User, email: email)
-    if User.valid_password?(user, password), do: user
-  end
+def get_user_by_email_or_username_and_password(identifier, password)
+when is_binary(identifier) and is_binary(password) do
+user =
+User
+|> where([u], u.email == ^identifier or u.username == ^identifier)
+|> Repo.one()
+
+if User.valid_password?(user, password), do: user
+end
 
   @doc """
   Gets a single user.

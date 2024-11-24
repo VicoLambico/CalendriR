@@ -227,4 +227,7 @@ defmodule CalendriRWeb.UserAuth do
 
   #ici pour changer la redirection d'un user login
   defp signed_in_path(_conn), do: ~p"/dashboard"
+
+
+
 end

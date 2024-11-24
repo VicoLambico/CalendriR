@@ -32,6 +32,14 @@ defmodule CalendriRWeb.UserRegistrationLive do
           class="space-y-6"
         >
           <div class="space-y-4">
+             <.input
+              field={@form[:username]}
+              type="text"
+              label="Username"
+              required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            />
+
             <.input
               field={@form[:email]}
               type="email"
@@ -39,6 +47,7 @@ defmodule CalendriRWeb.UserRegistrationLive do
               required
               class="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
             />
+
             <.input
               field={@form[:password]}
               type="password"
