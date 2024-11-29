@@ -6,7 +6,7 @@ defmodule CalendriR.Accounts do
   import Ecto.Query, warn: false
   alias CalendriR.Repo
 
-  alias CalendriR.Accounts.{User, UserToken, UserNotifier}
+  alias CalendriR.Accounts.{User, UserToken, UserNotifier,IsFriend}
 
   ## Database getters
 
@@ -354,4 +354,143 @@ end
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+
+
+
+@doc """
+  Liste tous les utilisateurs.
+  """
+  def list_users do
+    Repo.all(User)
+  end
+
+  @doc """
+  Envoie une demande d'amitié.
+  """
+def request_friendship(user_id, friend_id) do
+  %IsFriend{}
+  |> IsFriend.changeset(%{user_id: user_id, friend_id: friend_id, status: "pending"})
+  |> Repo.insert()
+  |> case do
+    {:ok, _friendship} ->
+      broadcast_friendship_update(user_id)
+      broadcast_friendship_update(friend_id)
+      {:ok, :success}
+
+    {:error, changeset} ->
+      {:error, changeset}
+  end
+end
+
+
+
+
+def respond_to_friend_request(user_id, friend_id, "accept") do
+  Repo.transaction(fn ->
+    case Repo.get_by(IsFriend, user_id: friend_id, friend_id: user_id) do
+      nil ->
+        Repo.rollback(:not_found)
+
+      friendship ->
+        # Met à jour le statut à "accepted"
+        friendship
+        |> Ecto.Changeset.change(status: "accepted")
+        |> Repo.update!()
+
+        # Vérifie si une relation inversée existe déjà
+        unless Repo.get_by(IsFriend, user_id: user_id, friend_id: friend_id) do
+          Repo.insert!(%IsFriend{user_id: user_id, friend_id: friend_id, status: "accepted"})
+        end
+    end
+  end)
+  |> case do
+    {:ok, _result} ->
+      broadcast_friendship_update(user_id)
+      broadcast_friendship_update(friend_id)
+      {:ok, :success}
+
+    {:error, reason} ->
+      {:error, reason}
+  end
+end
+
+
+def respond_to_friend_request(user_id, friend_id, "decline") do
+  case Repo.get_by(IsFriend, user_id: friend_id, friend_id: user_id) do
+    nil ->
+      {:error, :not_found}
+
+    friendship ->
+      # Supprime la relation
+      case Repo.delete(friendship) do
+        {:ok, _} ->
+          # Diffuse les mises à jour si la suppression réussit
+          broadcast_friendship_update(user_id)
+          broadcast_friendship_update(friend_id)
+          {:ok, :deleted}
+
+        {:error, reason} ->
+          {:error, reason}
+      end
+  end
+end
+
+
+  def respond_to_friend_request(_, _, _) do
+    {:error, :invalid_action}
+  end
+
+
+  @doc """
+  Liste les demandes d'amis entrantes (en attente).
+  """
+  def list_incoming_friend_requests(user_id) do
+    from(f in IsFriend,
+      where: f.friend_id == ^user_id and f.status == "pending",
+      preload: [:user]  # Assurez-vous que votre modèle `IsFriend` contient bien les préchargements nécessaires
+    )
+    |> Repo.all()
+  end
+
+
+  # Vérifie si les deux utilisateurs sont amis avec statut "accepted"
+  def is_friend?(user_id1, user_id2) do
+    case Repo.get_by(IsFriend, user_id: user_id1, friend_id: user_id2, status: "accepted") do
+      nil -> false
+      _friendship -> true
+    end
+  end
+
+  def list_friends(user_id) do
+    Repo.all(
+      from f in IsFriend,
+        where: (f.user_id == ^user_id ) and f.status == "accepted",
+        preload: [:user, :friend]
+    )
+    |> Enum.filter(fn f -> f.user_id != f.friend_id end) # Exclure les auto-amitiés éventuelles
+  end
+
+
+# Supprimer la relation d'amitié
+def remove_friend(user_id, friend_id) do
+  Repo.transaction(fn ->
+    # Supprime la relation bidirectionnelle
+    Repo.delete_all(
+      from f in IsFriend,
+      where: (f.user_id == ^user_id and f.friend_id == ^friend_id) or (f.user_id == ^friend_id and f.friend_id == ^user_id)
+    )
+  end)
+
+  broadcast_friendship_update(user_id)
+  broadcast_friendship_update(friend_id)
+  :ok
+end
+
+
+defp broadcast_friendship_update(user_id) do
+  Phoenix.PubSub.broadcast(CalendriR.PubSub, "friendship_updates:#{user_id}", :update_friendship)
+end
+
+
 end

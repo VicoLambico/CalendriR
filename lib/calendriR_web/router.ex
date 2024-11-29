@@ -24,8 +24,6 @@ defmodule CalendriRWeb.Router do
 
     get "/", PageController, :home
 
-
-
   end
 
   # Other scopes may use custom stacks.
@@ -75,10 +73,24 @@ defmodule CalendriRWeb.Router do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
-      live "/dashboard", DashboardLive, :index
+
+
+
+      live "/dashboard", DashbaordLive.Index, :index
+
+
+
+      post "/friends/request/:friend_id", FriendController, :request
+      post "/friends/respond/:friend_id/:action", FriendController, :respond
+
+
 
      # Ajouter ici les routes
-     live "events", EventLive.Index, :index
+
+     live "/friends", FriendLive.Index, :index
+
+
+     live "/events", EventLive.Index, :index
      live "/events/new", EventLive.Index, :new
      live "/events/:id/edit", EventLive.Index, :edit
 
