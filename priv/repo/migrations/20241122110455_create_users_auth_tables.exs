@@ -1,5 +1,6 @@
 defmodule CalendriR.Repo.Migrations.CreateUsersAuthTables do
   use Ecto.Migration
+  use Ecto.Schema
 
   def change do
     execute "CREATE EXTENSION IF NOT EXISTS citext", ""
@@ -10,6 +11,7 @@ defmodule CalendriR.Repo.Migrations.CreateUsersAuthTables do
       add :confirmed_at, :utc_datetime
 
       timestamps(type: :utc_datetime)
+
     end
 
     create unique_index(:users, [:email])

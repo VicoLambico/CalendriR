@@ -8,9 +8,9 @@ defmodule CalendriR.Events.Event do
     field :title, :string
     field :start_time, :naive_datetime
     field :end_time, :naive_datetime
-    field :team, :string
 
     timestamps(type: :utc_datetime)
+    belongs_to :team, CalendriR.Teams.Team
   end
 
   @doc false

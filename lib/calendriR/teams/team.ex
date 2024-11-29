@@ -9,6 +9,9 @@ defmodule CalendriR.Teams.Team do
     field :admin, :string
 
     timestamps(type: :utc_datetime)
+
+	many_to_many :users, CalendriR.Accounts.User, join_through: "users_teams"
+	has_many :events, CalendriR.Events.Event
   end
 
   @doc false

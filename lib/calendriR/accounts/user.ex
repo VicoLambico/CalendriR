@@ -11,6 +11,8 @@ defmodule CalendriR.Accounts.User do
     field :confirmed_at, :utc_datetime
 
     timestamps(type: :utc_datetime)
+
+	many_to_many :teams, CalendriR.Teams.Team, join_through: "users_team"
   end
 
   @doc """
