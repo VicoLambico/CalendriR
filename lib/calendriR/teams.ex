@@ -101,4 +101,19 @@ defmodule CalendriR.Teams do
   def change_team(%Team{} = team, attrs \\ %{}) do
     Team.changeset(team, attrs)
   end
+
+
+
+  def add_users_to_team(team_id, user_ids) do
+    user_ids
+    |> Enum.map(fn user_id ->
+      %CalendriR.Teams.UserTeam{}
+      |> CalendriR.Teams.UserTeam.changeset(%{user_id: user_id, team_id: team_id})
+      |> CalendriR.Repo.insert()
+    end)
+    |> Enum.each(fn
+      {:ok, _user_team} -> :ok
+      {:error, _changeset} -> :error
+    end)
+  end
 end

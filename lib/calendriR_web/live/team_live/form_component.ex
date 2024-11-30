@@ -1,6 +1,5 @@
 defmodule CalendriRWeb.TeamLive.FormComponent do
   use CalendriRWeb, :live_component
-
   alias CalendriR.Teams
 
   @impl true
@@ -23,6 +22,16 @@ defmodule CalendriRWeb.TeamLive.FormComponent do
         <.input field={@form[:teammates]} type="text" label="Teammates" />
         <.input field={@form[:admin]} type="text" label="Admin" />
         <.input field={@form[:description]} type="text" label="Description" />
+
+        <div>
+          <label for="user_ids">Select Users</label>
+          <select id="user_ids" name="team[user_ids][]" multiple>
+            <%= for user <- @users do %>
+                <option value={user.id}><%= user.username %></option>
+            <% end %>
+          </select>
+        </div>
+
         <:actions>
           <.button phx-disable-with="Saving...">Save Team</.button>
         </:actions>
@@ -33,12 +42,13 @@ defmodule CalendriRWeb.TeamLive.FormComponent do
 
   @impl true
   def update(%{team: team} = assigns, socket) do
+    # Liste des utilisateurs (  UTILISER  list_friend()   PLUS TARS !!)
+    users = CalendriR.Accounts.list_users()
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_new(:form, fn ->
-       to_form(Teams.change_team(team))
-     end)}
+     |> assign(:users, users)
+     |> assign_new(:form, fn -> to_form(Teams.change_team(team)) end)}
   end
 
   @impl true
@@ -50,6 +60,8 @@ defmodule CalendriRWeb.TeamLive.FormComponent do
   def handle_event("save", %{"team" => team_params}, socket) do
     save_team(socket, socket.assigns.action, team_params)
   end
+
+
 
   defp save_team(socket, :edit, team_params) do
     case Teams.update_team(socket.assigns.team, team_params) do
@@ -69,6 +81,9 @@ defmodule CalendriRWeb.TeamLive.FormComponent do
   defp save_team(socket, :new, team_params) do
     case Teams.create_team(team_params) do
       {:ok, team} ->
+        user_ids = team_params["user_ids"] || []
+        Teams.add_users_to_team(team.id, user_ids)
+
         notify_parent({:saved, team})
 
         {:noreply,

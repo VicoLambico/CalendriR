@@ -8,6 +8,8 @@ defmodule CalendriR.Teams.Team do
     field :teammates, :string
     field :admin, :string
 
+
+	  many_to_many :users, CalendriR.Accounts.User, join_through: "users_teams"
     timestamps(type: :utc_datetime)
   end
 
