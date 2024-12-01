@@ -19,8 +19,8 @@ defmodule CalendriRWeb.TeamLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:name]} type="text" label="Name" />
-        <.input field={@form[:teammates]} type="text" label="Teammates" />
-        <.input field={@form[:admin]} type="text" label="Admin" />
+
+
         <.input field={@form[:description]} type="text" label="Description" />
 
         <div>

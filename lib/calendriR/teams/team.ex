@@ -5,7 +5,7 @@ defmodule CalendriR.Teams.Team do
   schema "teams" do
     field :name, :string
     field :description, :string
-    field :teammates, :string
+
     field :admin, :string
 
 
@@ -16,7 +16,7 @@ defmodule CalendriR.Teams.Team do
   @doc false
   def changeset(team, attrs) do
     team
-    |> cast(attrs, [:name, :teammates, :admin, :description])
-    |> validate_required([:name, :teammates, :admin, :description])
+    |> cast(attrs, [:name,  :admin, :description])
+    |> validate_required([:name,  :description]) #:admin,
   end
 end

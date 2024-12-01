@@ -13,7 +13,7 @@
   row_click={fn {_id, team} -> JS.navigate(~p"/teams/#{team}") end}
 >
   <:col :let={{_id, team}} label="Name"><%= team.name %></:col>
-  <:col :let={{_id, team}} label="Teammates"><%= team.teammates %></:col>
+  <:col :let={{_id, team}} label="Teammates"></:col>
   <:col :let={{_id, team}} label="Admin"><%= team.admin %></:col>
   <:col :let={{_id, team}} label="Description"><%= team.description %></:col>
   <:action :let={{_id, team}}>
