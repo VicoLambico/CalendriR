@@ -6,7 +6,7 @@ defmodule CalendriR.Teams.Team do
     field :name, :string
     field :description, :string
 
-    field :admin, :string
+
 
 
 	  many_to_many :users, CalendriR.Accounts.User, join_through: "users_teams"
@@ -16,7 +16,7 @@ defmodule CalendriR.Teams.Team do
   @doc false
   def changeset(team, attrs) do
     team
-    |> cast(attrs, [:name,  :admin, :description])
+    |> cast(attrs, [:name,  :description])
     |> validate_required([:name,  :description]) #:admin,
   end
 end
