@@ -6,7 +6,9 @@ defmodule CalendriRWeb.EventLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :events, Events.list_events())}
+    user_id = socket.assigns.current_user.id
+    events = Events.list_events_for_user(user_id)
+    {:ok, stream(socket, :events, events)}
   end
 
   @impl true

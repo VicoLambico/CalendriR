@@ -7,7 +7,22 @@ defmodule CalendriR.Events do
   alias CalendriR.Repo
 
   alias CalendriR.Events.Event
+  alias CalendriR.Teams.UserTeam
+  @doc """
+  Liste des événements filtrés par l'utilisateur et son équipe.
+  """
+  def list_events_for_user(user_id) do
+    # On récupère les équipes de l'utilisateur
+    user_teams = from(ut in UserTeam, where: ut.user_id == ^user_id, select: ut.team_id)
 
+    # On filtre les événements associés aux équipes de l'utilisateur
+    from(e in Event,
+      join: t in assoc(e, :team),
+      where: e.team_id in subquery(user_teams),
+      preload: [team: t]
+    )
+    |> Repo.all()
+  end
   @doc """
   Returns the list of events.
 
@@ -18,7 +33,7 @@ defmodule CalendriR.Events do
 
   """
   def list_events do
-    Repo.all(Event)
+    Repo.all(Event) |> Repo.preload(:team)
   end
 
   @doc """
@@ -35,7 +50,7 @@ defmodule CalendriR.Events do
       ** (Ecto.NoResultsError)
 
   """
-  def get_event!(id), do: Repo.get!(Event, id)
+  def get_event!(id), do: Repo.get!(Event, id) |> Repo.preload(:team)
 
   @doc """
   Creates a event.
@@ -49,11 +64,19 @@ defmodule CalendriR.Events do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_event(attrs \\ %{}) do
-    %Event{}
-    |> Event.changeset(attrs)
-    |> Repo.insert()
+def create_event(attrs \\ %{}) do
+  %Event{}
+  |> Event.changeset(attrs)
+  |> Repo.insert()
+  |> case do
+    {:ok, event} ->
+      # Preload the associated team after successful insert
+      {:ok, Repo.preload(event, :team)}
+    {:error, _changeset} = error ->
+      error
   end
+end
+
 
   @doc """
   Updates a event.
@@ -67,11 +90,29 @@ defmodule CalendriR.Events do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_event(%Event{} = event, attrs) do
-    event
-    |> Event.changeset(attrs)
-    |> Repo.update()
+def update_event(%Event{} = event, attrs) do
+  # Créer un changeset avec les données fournies
+  changeset = Event.changeset(event, attrs)
+
+  # Vérification de la validité du changeset
+  if changeset.valid? do
+    # Effectuer l'update dans la base de données
+    case Repo.update(changeset) do
+      {:ok, updated_event} ->
+        # Si l'update est réussi, précharger l'équipe
+        updated_event = Repo.preload(updated_event, :team)
+        {:ok, updated_event}
+
+      {:error, changeset} ->
+        # Si l'update échoue, retourner une erreur
+        {:error, changeset}
+    end
+  else
+    # Si le changeset n'est pas valide, retourner une erreur
+    IO.inspect(changeset.errors, label: "Changeset errors")  # Pour aider au débogage
+    {:error, changeset}
   end
+end
 
   @doc """
   Deletes a event.

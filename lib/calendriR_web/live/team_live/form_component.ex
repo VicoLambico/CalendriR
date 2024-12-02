@@ -40,9 +40,13 @@ defmodule CalendriRWeb.TeamLive.FormComponent do
     """
   end
 
+  #TODO: quand current_user créer une team, isAdmin=true
+  #TODO: possiblité de chosir d'autre isAdmin=true
+  #TODO: lorsque de l'édition, pouvoir ajouter/enlever des user in team
+
   @impl true
   def update(%{team: team} = assigns, socket) do
-    # Liste des utilisateurs (  UTILISER  list_friend()   PLUS TARS !!)
+    #TODO: UTILISER  list_friend()   pour + de cohérence si l'app devait être déployer
     users = CalendriR.Accounts.list_users()
     {:ok,
      socket

@@ -8,6 +8,7 @@ defmodule CalendriR.Teams.Team do
 
 
 
+    has_many :events, CalendriR.Events.Event, foreign_key: :team_id # Relation has_many
 
 	  many_to_many :users, CalendriR.Accounts.User, join_through: "users_teams"
     timestamps(type: :utc_datetime)

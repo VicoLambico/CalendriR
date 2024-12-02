@@ -23,8 +23,13 @@ defmodule CalendriRWeb.EventLive.FormComponent do
         <.input field={@form[:description]} type="text" label="Description" />
         <.input field={@form[:start_time]} type="datetime-local" label="Start time" />
         <.input field={@form[:end_time]} type="datetime-local" label="End time" />
-        <.input field={@form[:team]} type="text" label="Team" />
-      <.input field={@form[:state]} type="select" label="State" options={["to do", "in progress", "terminate"]} />
+        <.input
+          field={@form[:team_id]}
+          type="select"
+          label="Team"
+          options={Enum.map(@teams, &{&1.name, &1.id})}
+        />
+      <.input field={@form[:state]} type="select" label="State" options={["to_do", "in_progress", "terminate"]} />
 
 
 
@@ -38,9 +43,14 @@ defmodule CalendriRWeb.EventLive.FormComponent do
 
   @impl true
   def update(%{event: event} = assigns, socket) do
+
+    #il faurait faire en sorte de ne voir que les teams ou current user est.
+    #(problème avec current_user, n'arrive pas à y accéder dans les live.component...)
+    teams = CalendriR.Teams.list_teams()
     {:ok,
      socket
      |> assign(assigns)
+     |> assign(:teams, teams)
      |> assign_new(:form, fn ->
        to_form(Events.change_event(event))
      end)}
