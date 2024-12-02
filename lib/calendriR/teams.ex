@@ -6,7 +6,7 @@ defmodule CalendriR.Teams do
   import Ecto.Query, warn: false
   alias CalendriR.Repo
 
-  alias CalendriR.Teams.Team
+  alias CalendriR.Teams.{Team,UserTeam}
 
   @doc """
   Returns the list of teams.
@@ -116,4 +116,40 @@ defmodule CalendriR.Teams do
       {:error, _changeset} -> :error
     end)
   end
+
+  def manage_users_in_team(team_id, user_ids) do
+    # Récupérer les utilisateurs actuels associés à cette équipe
+    current_user_ids =
+      Repo.all(from ut in UserTeam, where: ut.team_id == ^team_id, select: ut.user_id)
+
+    # Utilisateurs à ajouter : ceux qui sont dans user_ids mais pas encore dans UserTeam
+    users_to_add = user_ids -- current_user_ids
+
+    # Utilisateurs à supprimer : ceux qui sont dans current_user_ids mais pas dans user_ids
+    users_to_remove = current_user_ids -- user_ids
+
+
+    # Supprimer les utilisateurs non sélectionnés (ceux qui sont dans current_user_ids mais pas dans user_ids)
+    if users_to_remove != [] do
+      remove_users_from_team(team_id, users_to_remove)
+    end
+
+    # Ajouter les utilisateurs non existants
+    if users_to_add != [] do
+      add_users_to_team(team_id, users_to_add)
+    end
+
+
+  end
+
+
+
+  # Fonction pour supprimer des utilisateurs de l'équipe
+  defp remove_users_from_team(team_id, user_ids) do
+    user_ids
+    |> Enum.each(fn user_id ->
+      Repo.delete_all(from ut in UserTeam, where: ut.team_id == ^team_id and ut.user_id == ^user_id)
+    end)
+  end
+
 end

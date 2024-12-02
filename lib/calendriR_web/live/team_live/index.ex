@@ -4,6 +4,9 @@ defmodule CalendriRWeb.TeamLive.Index do
   alias CalendriR.Teams
   alias CalendriR.Teams.Team
 
+
+  #TODO: afficher la liste des user in team !!
+
   @impl true
   def mount(_params, _session, socket) do
     {:ok, stream(socket, :teams, Teams.list_teams())}
