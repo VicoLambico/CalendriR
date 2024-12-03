@@ -1,10 +1,19 @@
 <.header>
   Event <%= @event.id %>
-  <:subtitle>This is a event record from your database.</:subtitle>
+  <:subtitle>This is an event record from your database.</:subtitle>
   <:actions>
     <.link patch={~p"/events/#{@event}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit event</.button>
     </.link>
+    <%= if @is_subscribed do %>
+      <.link phx-click="unsubscribe" phx-value-event_id={@event.id}>
+        <.button class="bg-red-500 hover:bg-red-600 text-white">Unsubscribe</.button>
+      </.link>
+    <% else %>
+      <.link phx-click="subscribe" phx-value-event_id={@event.id}>
+        <.button class="bg-green-500 hover:bg-green-600 text-white">Subscribe</.button>
+      </.link>
+    <% end %>
   </:actions>
 </.header>
 

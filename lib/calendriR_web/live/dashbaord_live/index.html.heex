@@ -1,5 +1,29 @@
-<.header>
-<h1>Welcome, <%= @current_user.username %>!</h1>
- 
+<.header class="p-8 rounded-lg shadow-md flex justify-center items-center text-center">
+  <h1 class="text-5xl font-semibold" style="font-family: 'Lobster Two', sans-serif;">Welcome <%= @current_user.username %> <br>let's see what's next for you!</h1>
 </.header>
 
+<h2 class="text-3xl font-bold mt-8" style="font-family: 'Lobster Two', sans-serif;">Your Subscribed Events</h2>
+
+<%= if Enum.empty?(@subscribed_events) do %>
+  <p class="mt-4 text-gray-600">You are not subscribed to any events yet.
+    <.link href={~p"/events"} class="text-purple-600 hover:text-indigo-700 ml-2">Subscribe now</.link>
+  </p>
+<% else %>
+  <ul class="mt-4 space-y-6">
+    <%= for event <- @subscribed_events do %>
+      <li class="p-4 border border-gray-300 rounded-lg shadow-sm hover:shadow-lg transition-all cursor-pointer"
+          phx-click={JS.navigate(~p"/events/#{event.id}")}>
+        <div class="flex justify-between items-center">
+          <strong class="text-lg font-semibold text-gray-900"><%= event.title %></strong>
+          <span class="text-sm text-gray-500"><%= event.start_time %> - <%= event.end_time %></span>
+        </div>
+        <p class="text-gray-700 mt-2"><%= event.description %></p>
+        <%= if event.team do %>
+          <p class="text-sm mt-2 text-gray-600">Team: <%= event.team.name %></p>
+        <% else %>
+          <p class="text-sm mt-2 text-gray-600">No Team Assigned</p>
+        <% end %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

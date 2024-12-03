@@ -7,7 +7,7 @@ defmodule CalendriR.Accounts do
   alias CalendriR.Repo
 
   alias CalendriR.Accounts.{User, UserToken, UserNotifier,IsFriend}
-
+  alias CalendriR.Events.Subscribe
   ## Database getters
 
   @doc """
@@ -491,6 +491,68 @@ end
 defp broadcast_friendship_update(user_id) do
   Phoenix.PubSub.broadcast(CalendriR.PubSub, "friendship_updates:#{user_id}", :update_friendship)
 end
+
+
+ # Ajouter une relation entre un utilisateur et un événement (abonnement)
+ # Ajouter une relation entre un utilisateur et un événement (abonnement)
+def subscribe_to_event(user_id, event_id) do
+  changeset =
+    %Subscribe{}
+    |> Subscribe.changeset(%{user_id: user_id, event_id: event_id})
+
+  case Repo.insert(changeset) do
+    {:ok, _subscription} ->
+      # Diffusion de l'événement
+      broadcast_subscription_update(user_id, event_id)
+      {:ok, "Successfully subscribed"}
+
+    {:error, changeset} ->
+      {:error, changeset}
+  end
+end
+
+
+
+# Vérifie si un utilisateur est abonné à un événement
+def subscribed?(user_id, event_id) do
+  Repo.exists?(
+    from sub in Subscribe,
+    where: sub.user_id == ^user_id and sub.event_id == ^event_id
+  )
+end
+
+def unsubscribe_from_event(user_id, event_id) do
+  # Trouver l'abonnement correspondant
+  subscription =
+    Repo.one(from sub in Subscribe, where: sub.user_id == ^user_id and sub.event_id == ^event_id)
+
+  # Si un abonnement existe, le supprimer
+  if subscription do
+    case Repo.delete(subscription) do
+      {:ok, _deleted_subscription} ->
+        # Diffusion de la mise à jour d'abonnement
+        broadcast_subscription_update(user_id, event_id)
+        {:ok, "Successfully unsubscribed"}
+
+      {:error, _reason} ->
+        {:error, "Failed to unsubscribe"}
+    end
+  else
+    {:error, "No subscription found"}
+  end
+end
+
+
+
+# Diffuse une mise à jour d'abonnement
+defp broadcast_subscription_update(user_id, event_id) do
+  Phoenix.PubSub.broadcast(
+    CalendriR.PubSub,
+    "subscription_updates:#{user_id}",
+    {:update_subscription, event_id}
+  )
+end
+
 
 
 end

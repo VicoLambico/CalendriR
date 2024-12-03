@@ -16,14 +16,28 @@
   <:col :let={{_id, event}} label="Description"><%= event.description %></:col>
   <:col :let={{_id, event}} label="Start time"><%= event.start_time %></:col>
   <:col :let={{_id, event}} label="End time"><%= event.end_time %></:col>
+  <:col :let={{_id, event}} label="Team"> <%= event.team.name %> </:col>
+  <:action :let={{_id, event}} label="Actions">
+  <%= if not Accounts.subscribed?(@current_user.id, event.id) do %>
+    <.link
+      phx-click="subscribe"
+      phx-value-event_id={event.id}
+      class="button"
+    >
+      Subscribe
+    </.link>
+  <% else %>
+    <.link
+      phx-click="unsubscribe"
+      phx-value-event_id={event.id}
+      class="button"
+    >
+      Unsubscribe
+    </.link>
+  <% end %>
+</:action>
 
-  <:col :let={{_id, event}} label="Team">
-   <%= if event.team do %>
-     <%= event.team.name %>
-    <% else %>
-     No Team Assigned
-   <% end %>
-  </:col>
+
 
   <:col :let={{_id, event}} label="State"><%= event.state %></:col>
   <:action :let={{_id, event}}>

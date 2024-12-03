@@ -10,6 +10,8 @@ defmodule CalendriR.Events.Event do
     field :state, :string
     belongs_to :team, CalendriR.Teams.Team
 
+    many_to_many :users, CalendriR.Accounts.User, join_through: "subscribes"
+
     timestamps()
   end
 

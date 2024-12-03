@@ -10,6 +10,7 @@ defmodule CalendriR.Accounts.User do
     field :current_password, :string, virtual: true, redact: true
     field :confirmed_at, :utc_datetime
 
+    many_to_many :events, CalendriR.Events.Event, join_through: "subscribes", on_delete: :delete_all
     many_to_many :teams, CalendriR.Teams.Team, join_through: "users_team", on_delete: :delete_all
     timestamps(type: :utc_datetime)
   end

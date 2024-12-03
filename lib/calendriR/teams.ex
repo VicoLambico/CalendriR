@@ -5,8 +5,7 @@ defmodule CalendriR.Teams do
 
   import Ecto.Query, warn: false
   alias CalendriR.Repo
-
-  alias CalendriR.Teams.{Team,UserTeam}
+  alias CalendriR.Teams.{Team, UserTeam}
 
   @doc """
   Returns the list of teams.
@@ -53,6 +52,14 @@ defmodule CalendriR.Teams do
     %Team{}
     |> Team.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, team} ->
+        broadcast_team_update()
+        {:ok, team}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
@@ -71,6 +78,14 @@ defmodule CalendriR.Teams do
     team
     |> Team.changeset(attrs)
     |> Repo.update()
+    |> case do
+      {:ok, updated_team} ->
+        broadcast_team_update()
+        {:ok, updated_team}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
@@ -86,8 +101,16 @@ defmodule CalendriR.Teams do
 
   """
   def delete_team(%Team{} = team) do
-    Repo.delete(team)
+    case Repo.delete(team) do
+      {:ok, team} ->
+        broadcast_team_update()
+        {:ok, team}
+
+      {:error, _reason} ->
+        {:error, "Failed to delete the team"}
+    end
   end
+
 
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking team changes.
@@ -102,8 +125,6 @@ defmodule CalendriR.Teams do
     Team.changeset(team, attrs)
   end
 
-
-
   def add_users_to_team(team_id, user_ids) do
     user_ids
     |> Enum.map(fn user_id ->
@@ -115,6 +136,9 @@ defmodule CalendriR.Teams do
       {:ok, _user_team} -> :ok
       {:error, _changeset} -> :error
     end)
+
+    # Diffusion après ajout des utilisateurs
+    broadcast_team_update()
   end
 
   def manage_users_in_team(team_id, user_ids) do
@@ -128,7 +152,6 @@ defmodule CalendriR.Teams do
     # Utilisateurs à supprimer : ceux qui sont dans current_user_ids mais pas dans user_ids
     users_to_remove = current_user_ids -- user_ids
 
-
     # Supprimer les utilisateurs non sélectionnés (ceux qui sont dans current_user_ids mais pas dans user_ids)
     if users_to_remove != [] do
       remove_users_from_team(team_id, users_to_remove)
@@ -138,11 +161,7 @@ defmodule CalendriR.Teams do
     if users_to_add != [] do
       add_users_to_team(team_id, users_to_add)
     end
-
-
   end
-
-
 
   # Fonction pour supprimer des utilisateurs de l'équipe
   defp remove_users_from_team(team_id, user_ids) do
@@ -150,6 +169,12 @@ defmodule CalendriR.Teams do
     |> Enum.each(fn user_id ->
       Repo.delete_all(from ut in UserTeam, where: ut.team_id == ^team_id and ut.user_id == ^user_id)
     end)
+
+    # Diffusion après suppression des utilisateurs
+    broadcast_team_update()
   end
 
+  defp broadcast_team_update do
+    Phoenix.PubSub.broadcast(CalendriR.PubSub, "teams_updates", :update_teams)
+  end
 end

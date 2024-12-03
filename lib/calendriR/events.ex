@@ -8,6 +8,7 @@ defmodule CalendriR.Events do
 
   alias CalendriR.Events.Event
   alias CalendriR.Teams.UserTeam
+
   @doc """
   Liste des événements filtrés par l'utilisateur et son équipe.
   """
@@ -70,6 +71,8 @@ def create_event(attrs \\ %{}) do
   |> Repo.insert()
   |> case do
     {:ok, event} ->
+      broadcast_event_update()
+
       # Preload the associated team after successful insert
       {:ok, Repo.preload(event, :team)}
     {:error, _changeset} = error ->
@@ -99,6 +102,7 @@ def update_event(%Event{} = event, attrs) do
     # Effectuer l'update dans la base de données
     case Repo.update(changeset) do
       {:ok, updated_event} ->
+        broadcast_event_update()
         # Si l'update est réussi, précharger l'équipe
         updated_event = Repo.preload(updated_event, :team)
         {:ok, updated_event}
@@ -141,5 +145,22 @@ end
   """
   def change_event(%Event{} = event, attrs \\ %{}) do
     Event.changeset(event, attrs)
+  end
+
+   @doc """
+  Liste les événements auxquels un utilisateur est abonné.
+  """
+  def list_subscribed_events(user_id) do
+    Repo.all(
+      from e in Event,
+        join: s in "subscribes",
+        on: s.event_id == e.id,
+        where: s.user_id == ^user_id,
+        preload: [:team]
+    )
+  end
+
+  defp broadcast_event_update do
+    Phoenix.PubSub.broadcast(CalendriR.PubSub, "events_updates", :update_events)
   end
 end
