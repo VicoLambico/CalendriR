@@ -41,11 +41,12 @@ defmodule CalendriRWeb.EventLive.FormComponent do
     """
   end
 
+  #TODO: Posibilité de créer un event sans teams, si c'est le cas ça créer un team{name: current_user, discription: "", userteam{current_user.id,team.id}}
+  # afficher uniquement les teams dont current_user fait parties dans le choix des teams (création/édition)
+
   @impl true
   def update(%{event: event} = assigns, socket) do
 
-    #il faurait faire en sorte de ne voir que les teams ou current user est.
-    #(problème avec current_user, n'arrive pas à y accéder dans les live.component...)
     teams = CalendriR.Teams.list_teams()
     {:ok,
      socket

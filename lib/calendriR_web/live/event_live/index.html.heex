@@ -17,6 +17,12 @@
   <:col :let={{_id, event}} label="Start time"><%= event.start_time %></:col>
   <:col :let={{_id, event}} label="End time"><%= event.end_time %></:col>
   <:col :let={{_id, event}} label="Team"> <%= event.team.name %> </:col>
+
+
+
+
+  <:col :let={{_id, event}} label="State"><%= event.state %></:col>
+
   <:action :let={{_id, event}} label="Actions">
   <%= if not Accounts.subscribed?(@current_user.id, event.id) do %>
     <.link
@@ -38,8 +44,6 @@
 </:action>
 
 
-
-  <:col :let={{_id, event}} label="State"><%= event.state %></:col>
   <:action :let={{_id, event}}>
     <div class="sr-only">
       <.link navigate={~p"/events/#{event}"}>Show</.link>

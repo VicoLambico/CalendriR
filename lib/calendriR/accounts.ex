@@ -453,6 +453,48 @@ end
     |> Repo.all()
   end
 
+  def list_pending_requests(user_id) do
+    # Récupérer les demandes entrantes et sortantes en attente
+
+    outgoing_requests =
+      from(f in IsFriend,
+        where: f.user_id == ^user_id and f.status == "pending",
+        preload: [:friend]  # Assurez-vous que votre modèle a une association avec :friend
+      )
+      |> Repo.all()
+    %{outgoing: outgoing_requests}
+
+  end
+
+  @doc """
+Annule une demande d'amitié en attente.
+
+## Paramètres :
+  - `user_id` : ID de l'utilisateur qui a envoyé la demande.
+  - `friend_id` : ID de l'utilisateur qui a reçu la demande.
+
+## Retour :
+  - `{:ok, :deleted}` si la demande est supprimée avec succès.
+  - `{:error, :not_found}` si la demande n'existe pas.
+"""
+def cancel_friend_request(user_id, friend_id) do
+  case Repo.get_by(IsFriend, user_id: user_id, friend_id: friend_id, status: "pending") do
+    nil ->
+      {:error, :not_found}
+
+    request ->
+      case Repo.delete(request) do
+        {:ok, _} ->
+          broadcast_friendship_update(user_id)
+          broadcast_friendship_update(friend_id)
+          {:ok, :deleted}
+
+        {:error, reason} ->
+          {:error, reason}
+      end
+  end
+end
+
 
   # Vérifie si les deux utilisateurs sont amis avec statut "accepted"
   def is_friend?(user_id1, user_id2) do

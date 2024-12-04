@@ -3,13 +3,16 @@ defmodule CalendriRWeb.TeamLive.Index do
 
   alias CalendriR.Teams
   alias CalendriR.Teams.Team
-
+#TODO : regler le problème lorsque delete, le liveview ne broacast pas correctement
   @impl true
   def mount(_params, _session, socket) do
     # Abonnement aux mises à jour des équipes
     Phoenix.PubSub.subscribe(CalendriR.PubSub, "teams_updates")
+    current_user = socket.assigns.current_user.id
 
-    {:ok, stream(socket, :teams, Teams.list_teams())}
+    # Récupérer uniquement les équipes où l'utilisateur est membre
+    teams = Teams.list_teams_for_user(current_user)
+    {:ok, stream(socket, :teams, teams)}
   end
 
 
@@ -47,7 +50,9 @@ defmodule CalendriRWeb.TeamLive.Index do
   @impl true
   def handle_info(:update_teams, socket) do
     # Récupérer la liste des équipes après une mise à jour
-    updated_teams = Teams.list_teams()
+    current_user = socket.assigns.current_user.id
+
+    updated_teams = Teams.list_teams_for_user(current_user)
 
     # Rafraîchir les équipes dans la vue
     {:noreply, stream(socket, :teams, updated_teams)}

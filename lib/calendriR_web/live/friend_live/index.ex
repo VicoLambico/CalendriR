@@ -16,10 +16,12 @@ def mount(_params, session, socket) do
 
     friend_requests = Accounts.list_incoming_friend_requests(current_user.id)
     friends = Accounts.list_friends(current_user.id)
+    pending_requests = CalendriR.Accounts.list_pending_requests(current_user.id)
 
     {:ok, assign(socket,
                  current_user: current_user,
                  users: users,
+                 pending_requests: pending_requests,
                  friend_requests: friend_requests,
                  friends: friends)}
   else
@@ -38,8 +40,9 @@ def handle_info(:update_friendship, socket) do
 
   friend_requests = Accounts.list_incoming_friend_requests(current_user.id)
   friends = Accounts.list_friends(current_user.id)
+  pending_requests = CalendriR.Accounts.list_pending_requests(socket.assigns.current_user.id)
 
-  {:noreply, assign(socket, users: users, friend_requests: friend_requests, friends: friends)}
+  {:noreply, assign(socket, users: users, friend_requests: friend_requests, friends: friends, pending_requests: pending_requests)}
 end
 
 
@@ -88,6 +91,19 @@ end
 
       {:error, _reason} ->
         {:noreply, put_flash(socket, :error, "Unable to remove friend.")}
+    end
+  end
+
+  @impl true
+  def handle_event("cancel_request", %{"friend_id" => friend_id}, socket) do
+    current_user_id = socket.assigns.current_user.id
+
+    case Accounts.cancel_friend_request(current_user_id, String.to_integer(friend_id)) do
+      {:ok, :deleted} ->
+        {:noreply, assign(socket, :info, "Friend request canceled.")}
+
+      {:error, :not_found} ->
+        {:noreply, assign(socket, :error, "Friend request not found.")}
     end
   end
 

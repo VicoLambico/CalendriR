@@ -40,13 +40,13 @@ defmodule CalendriRWeb.TeamLive.FormComponent do
     """
   end
 
-  #TODO: quand current_user créer une team, ajouter automatiquement current_user in team et isAdmin=true (toujours problème n'arrive pas attrapper current_user dans les live_component)
-  #TODO: possiblité de chosir d'autre isAdmin=true
+  #TODO1: quand current_user créer une team, ajouter automatiquement current_user in team et isAdmin=true (toujours problème n'arrive pas attrapper current_user dans les live_component)
+  #TODO2: possiblité de chosir d'autre isAdmin=true
 
   @impl true
   def update(%{team: team} = assigns, socket) do
-    #TODO: UTILISER  list_friend()   pour + de cohérence si l'app devait être déployer
-    #CF1: Quand ça sera fait, ça n'affichera plus current_user
+    #TODO3: UTILISER  list_friend()   pour + de cohérence si l'app devait être déployer
+    #CF1: Quand ça sera fait, ça n'affichera plus current_user (donc si c'est le cas, il faut que TODO1 soit effectuer)
     users = CalendriR.Accounts.list_users()
     {:ok,
      socket

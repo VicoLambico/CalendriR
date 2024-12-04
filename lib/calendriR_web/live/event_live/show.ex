@@ -2,7 +2,7 @@ defmodule CalendriRWeb.EventLive.Show do
   use CalendriRWeb, :live_view
 
   alias CalendriR.{Accounts, Events}
-
+  alias CalendriR.Teams
   @impl true
   def mount(_params, _session, socket) do
     {:ok, socket}

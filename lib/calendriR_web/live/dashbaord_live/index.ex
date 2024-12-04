@@ -1,7 +1,7 @@
 defmodule CalendriRWeb.DashbaordLive.Index do
   use CalendriRWeb, :live_view
   alias CalendriR.Events
-
+  alias CalendriR.Teams
   @impl true
   def mount(_params, _session, socket) do
     current_user = socket.assigns.current_user

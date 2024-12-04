@@ -16,7 +16,10 @@
 
 
 
-  <:col :let={{_id, team}} label="Teammates">TODO: liste user in <%= team.name %> </:col>
+    <!-- Afficher la liste des utilisateurs dans l'équipe -->
+  <:col :let={{_id, team}} label="Teammates">
+    <%= Enum.map(Teams.list_user_in_team(team.id), fn user -> user.username end) |> Enum.join(", ") %> 
+  </:col>
 
 
 

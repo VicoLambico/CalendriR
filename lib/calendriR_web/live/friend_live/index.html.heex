@@ -1,6 +1,11 @@
 <div class="container mx-auto p-8">
   <h1 class="text-6xl font-bold text-center mb-6" style="font-family: 'Lobster Two', sans-serif;">Manage your Friendships</h1>
 
+
+
+
+
+
   <!-- Section: Users to be Added -->
   <div class="mb-8">
     <h2 class="text-xl font-semibold text-gray-700 mb-4">Not yet a friend..</h2>
@@ -50,7 +55,27 @@
       <% end %>
     </ul>
   </div>
-
+<!-- Section: Outgoing Friend Requests -->
+  <div class="mb-8">
+    <h2 class="text-xl font-semibold text-gray-700 mb-4">Pending Friend Requests</h2>
+    <ul class="space-y-4">
+      <%= for request <- @pending_requests.outgoing do %>
+        <li class="flex items-center justify-between bg-gray-100 p-4 rounded-md shadow">
+          <span class="text-lg font-medium text-gray-800">
+            Friend request sent to <%= request.friend.username %>.
+          </span>
+          <button 
+            phx-click="cancel_request" 
+            phx-value-friend_id={request.friend.id}
+      
+               
+            class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600">
+            Cancel Request
+          </button>
+        </li>
+      <% end %>
+    </ul>
+  </div>
   <!-- Section: Friends -->
   <div>
     <h2 class="text-xl font-semibold text-gray-700 mb-4">

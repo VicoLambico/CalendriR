@@ -6,6 +6,7 @@ defmodule CalendriR.Teams do
   import Ecto.Query, warn: false
   alias CalendriR.Repo
   alias CalendriR.Teams.{Team, UserTeam}
+  alias CalendriR.Accounts.User
 
   @doc """
   Returns the list of teams.
@@ -18,6 +19,27 @@ defmodule CalendriR.Teams do
   """
   def list_teams do
     Repo.all(Team)
+  end
+
+  def list_teams_for_user(user_id) do
+    # Sous-requête pour récupérer les IDs des équipes auxquelles l'utilisateur appartient
+    user_teams = from(ut in UserTeam, where: ut.user_id == ^user_id, select: ut.team_id)
+
+    # Requête principale pour récupérer les équipes
+    from(t in Team,
+      where: t.id in subquery(user_teams)
+
+    )
+    |> Repo.all()
+  end
+
+  def list_user_in_team(team_id) do
+    from(ut in UserTeam,
+      join: u in User, on: u.id == ut.user_id,
+      where: ut.team_id == ^team_id,
+      select: u
+    )
+    |> Repo.all()
   end
 
   @doc """

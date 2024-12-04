@@ -23,6 +23,13 @@
   <:item title="Start time"><%= @event.start_time %></:item>
   <:item title="End time"><%= @event.end_time %></:item>
   <:item title="Team"><%= @event.team.name %></:item>
+
+  <:item title="Teammates">
+      <%= Enum.map(Teams.list_user_in_team(@event.team.id), fn user -> user.username end)
+           |> Enum.join(", ") %>
+  </:item>
+  
+
   <:item title="State"><%= @event.state %></:item>
 </.list>
 
