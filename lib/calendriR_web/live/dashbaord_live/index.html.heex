@@ -2,6 +2,8 @@
   <h1 class="text-5xl font-semibold" style="font-family: 'Lobster Two', sans-serif;">Welcome <%= @current_user.username %> <br>let's see what's next for you!</h1>
 </.header>
 
+<div id="calendar" phx-hook="FullCalendarHook" phx-update="ignore"></div>
+
 <h2 class="text-3xl font-bold mt-8" style="font-family: 'Lobster Two', sans-serif;">Your Subscribed Events</h2>
 
 <%= if Enum.empty?(@subscribed_events) do %>

@@ -1,6 +1,8 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+@import '@fullcalendar/core/main.css';
+@import '@fullcalendar/daygrid/main.css';
 
 /* This file is for your main application CSS */
 @tailwind base;

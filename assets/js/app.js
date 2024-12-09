@@ -42,3 +42,27 @@ liveSocket.connect()
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
 
+// Create a calendar graphical element with fullcalendar. For more info, check fullcalendar.io
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+
+document.addEventListener('DOMContentLoaded', function() {
+  const calendarEl = document.getElementById('calendar');
+  const calendar = new Calendar(calendarEl, {
+    plugins: [dayGridPlugin, interactionPlugin],
+    initialView: 'dayGridMonth',
+    events: "/events.json", // Path to LiveView endpoint
+    dateClick: function(info) {
+      // Handle date click
+      alert('Date clicked: ' + info.dateStr);
+    },
+    eventClick: function(info) {
+      // Handle event click
+      alert('Event clicked: ' + info.event.title);
+    }
+  });
+
+  calendar.render();
+});
+
