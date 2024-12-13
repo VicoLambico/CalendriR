@@ -11,7 +11,7 @@ config :pbkdf2_elixir, :rounds, 1
 config :calendriR, CalendriR.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "localhost",
+  hostname: "db",
   database: "calendrir_test#{System.get_env("MIX_TEST_PARTITION")}",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: System.schedulers_online() * 2
