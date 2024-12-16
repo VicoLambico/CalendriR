@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # Elixir & Phoenix application service
+  calendrir_app:
+    image: elixir:1.15
+    container_name: calendrir_phoenix_app
+    working_dir: /app
+    volumes:
+      - .:/app  # Mounts the current directory to the /app directory in the container
+    environment:
+      - MIX_ENV=dev
+      - DATABASE_URL=ecto://postgres:postgres@db/calendrir_dev  # Use 'db' as the hostname
+    command: >
+      bash -c "
+        mix deps.get &&
+        mix ecto.create &&
+        mix ecto.migrate &&
+        mix phx.server
+      "
+    ports:
+      - "4000:4000"  # Exposes Phoenix server on port 4000
+    depends_on:
+      - db  # Ensure that db service is started before app service
+
+  # PostgreSQL database service
+  db:
+    image: postgres:15
+    container_name: calendrir_postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=calendrir_dev  # Database name
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persistent data volume for PostgreSQL
+    ports:
+      - "5432:5432"  # Exposes PostgreSQL service on port 5432
+
+  # Optional: Test service (if you plan to run tests in a separate container)
+  calendrir_test:
+    image: elixir:1.15
+    container_name: calendrir_phoenix_test
+    working_dir: /app
+    volumes:
+      - .:/app
+    environment:
+      - MIX_ENV=test
+      - DATABASE_URL=ecto://postgres:postgres@db/calendrir_test  # Use 'db' for test DB
+    command: >
+      bash -c "
+        mix deps.get &&
+        mix ecto.create &&
+        mix ecto.migrate &&
+        mix test
+      "
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:  # Volume for persisting PostgreSQL data across container restarts
+
